@@ -2,10 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 import serverlessExpress from '@vendia/serverless-express';
-import { AppModule } from './app.module';
 
 let cachedServer: any;
 
@@ -21,9 +21,9 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler = async (event: any, context: any, callback: any) => {
+export default async function handler(req: any, res: any) {
   if (!cachedServer) {
     cachedServer = await bootstrap();
   }
-  return cachedServer(event, context, callback);
-};
+  return cachedServer(req, res);
+}
